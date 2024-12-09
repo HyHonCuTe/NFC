@@ -298,8 +298,15 @@ class _FindScreenState extends State<FindScreen> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // Dropdown chọn chế độ học
-            DropdownButton<String>(
+            // DropdownButton<String>(
+            //   value: selectedMode,
+            const SizedBox(height: 10),
+            DropdownButtonFormField<String>(
               value: selectedMode,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Select Mode',
+              ),
               items: const [
                 DropdownMenuItem(value: 'English', child: Text('Tiếng Anh')),
                 DropdownMenuItem(
@@ -319,27 +326,57 @@ class _FindScreenState extends State<FindScreen> {
                 });
               },
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 150),
             // Hiển thị từ vựng
-            Text(
-              selectedMode == 'English'
-                  ? currentWord!.englishWord
-                  : currentWord!.vietnameseWord,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            // Nút Nghe
-            if (selectedMode == 'Listen in English' ||
-                selectedMode == 'Listen in Vietnamese')
-              ElevatedButton(
-                onPressed: isListening ? null : _speakWord,
-                child: Text(isListening ? 'Đang phát âm...' : 'Nghe từ vựng'),
+            Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15),
               ),
-            const SizedBox(height: 16),
-            // Nút quét NFC
-            ElevatedButton(
-              onPressed: isScanning || isListening ? null : _startNfcScan,
-              child: Text(isScanning ? 'Đang quét thẻ...' : 'Quét thẻ NFC'),
+              elevation: 5,
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(height: 40),
+                      Text(
+                        selectedMode == 'English'
+                            ? currentWord!.englishWord
+                            : currentWord!.vietnameseWord,
+                        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+
+                      ),
+                      const SizedBox(height: 40),
+                      // Nút Nghe
+                      if (selectedMode == 'Listen in English' ||
+                          selectedMode == 'Listen in Vietnamese')
+                        ElevatedButton.icon(
+                          onPressed: isListening ? null : _speakWord,
+                          icon: isListening? const CircularProgressIndicator(
+                              color: Colors.white,
+                              strokeWidth: 2,
+                          ): const Icon(Icons.volume_up),
+
+                          label: Text(isListening ? 'Đang phát âm...' : 'Nghe từ vựng'),
+                        ),
+                      const SizedBox(height: 10),
+                      // Nút quét NFC
+                      ElevatedButton.icon(
+                        onPressed: isScanning || isListening ? null : _startNfcScan,
+                        icon: isScanning
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
+                              )
+                            : const Icon(Icons.nfc),
+                        label: Text(isScanning ? 'Scanning NFC...' : 'Scan NFC Tag'),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
         ),
